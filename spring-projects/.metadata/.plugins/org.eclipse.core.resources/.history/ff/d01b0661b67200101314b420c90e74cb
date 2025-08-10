@@ -1,0 +1,39 @@
+
+package com.moviebooking.repository;
+
+import com.moviebooking.entity.Movie;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest
+public class MovieRepositoryTest {
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Test
+    public void testSaveMovie() {
+        Movie movie = new Movie(null, "Inception", "Sci-Fi");
+        Movie savedMovie = movieRepository.save(movie);
+
+        assertNotNull(savedMovie.getId());
+        assertEquals("Inception", savedMovie.getTitle());
+        assertEquals("Sci-Fi", savedMovie.getGenre());
+    }
+
+    @Test
+    public void testFindMovieById() {
+        Movie movie = new Movie(null, "Interstellar", "Sci-Fi");
+        Movie savedMovie = movieRepository.save(movie);
+
+        Optional<Movie> found = movieRepository.findById(savedMovie.getId());
+
+        assertTrue(found.isPresent());
+        assertEquals("Interstellar", found.get().getTitle());
+    }
+}

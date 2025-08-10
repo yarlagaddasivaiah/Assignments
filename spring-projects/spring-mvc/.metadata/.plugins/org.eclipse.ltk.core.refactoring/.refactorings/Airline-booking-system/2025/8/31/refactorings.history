@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Airline-booking-system/src/main/resources/airline-context.xml&apos; to &apos;bean.xml&apos;" description="Rename resource &apos;airline-context.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/resources/airline-context.xml" name="bean.xml" stamp="1754027088349" updateReferences="true"/>
+</session>

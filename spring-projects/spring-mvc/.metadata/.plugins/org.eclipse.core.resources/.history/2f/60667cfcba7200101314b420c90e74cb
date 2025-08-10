@@ -1,0 +1,73 @@
+package com.moviebooking.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moviebooking.entity.Movie;
+import com.moviebooking.entity.Theater;
+import com.moviebooking.repository.MovieRepository;
+import com.moviebooking.repository.TheaterRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class MovieControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private TheaterRepository theaterRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private Theater savedTheater;
+
+    @BeforeEach
+    public void setup() {
+        movieRepository.deleteAll();
+        theaterRepository.deleteAll();
+
+        Theater theater = new Theater();
+        theater.setName("PVR Cinemas");
+        theater.setLocation("Hyderabad");
+        savedTheater = theaterRepository.save(theater);
+    }
+
+    @Test
+    public void testAddMovieWithTheater() throws Exception {
+        // Create a movie with reference to the saved theater
+        Movie movie = new Movie();
+        movie.setTitle("Inception");
+        movie.setGenre("Sci-Fi");
+        movie.setTheater(savedTheater); // set the existing theater
+
+        // Convert to JSON
+        String jsonRequest = objectMapper.writeValueAsString(movie);
+
+        // Perform POST request
+        mockMvc.perform(post("/api/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+                .andExpect(status().isOk());
+
+        // Assert from repository
+        Movie savedMovie = movieRepository.findAll().get(0);
+        assertEquals("Inception", savedMovie.getTitle());
+        assertEquals("PVR Cinemas", savedMovie.getTheater().getName());
+    }
+}

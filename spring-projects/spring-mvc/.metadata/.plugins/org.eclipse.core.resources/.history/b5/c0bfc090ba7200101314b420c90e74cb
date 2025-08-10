@@ -1,0 +1,67 @@
+package com.moviebooking.entity;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+public class Movie {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+    private String genre;
+
+    @ManyToMany(mappedBy = "movies", cascade = CascadeType.ALL)
+    private List<Theater> theaters;
+
+    // No-arg constructor (required by JPA)
+    public Movie() {}
+
+    // Constructor without id (for creation)
+    public Movie(String title, String genre) {
+        this.title = title;
+        this.genre = genre;
+    }
+
+    // Constructor with id (useful for tests)
+    public Movie(Long id, String title, String genre) {
+        this.id = id;
+        this.title = title;
+        this.genre = genre;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public List<Theater> getTheaters() {
+        return theaters;
+    }
+
+    public void setTheaters(List<Theater> theaters) {
+        this.theaters = theaters;
+    }
+}

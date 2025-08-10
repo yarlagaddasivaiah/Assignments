@@ -1,0 +1,56 @@
+package com.moviebooking.repository;
+
+import com.moviebooking.entity.Movie;
+import com.moviebooking.entity.Theater;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest
+public class MovieRepositoryTest {
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private TheaterRepository theaterRepository;
+
+    private Theater savedTheater;
+
+    @BeforeEach
+    public void setup() {
+        movieRepository.deleteAll();
+        theaterRepository.deleteAll();
+
+        Theater theater = new Theater();
+        theater.setName("INOX");
+        theater.setLocation("Chennai");
+        savedTheater = theaterRepository.save(theater);
+    }
+
+    @Test
+    public void testSaveAndFindMovie() {
+        Movie movie = new Movie();
+        movie.setTitle("Interstellar");
+        movie.setGenre("Sci-Fi");
+        movie.setTheater(savedTheater);
+
+        movieRepository.save(movie);
+
+        List<Movie> movies = movieRepository.findAll();
+        assertEquals(1, movies.size());
+
+        Movie savedMovie = movies.get(0);
+        assertEquals("Interstellar", savedMovie.getTitle());
+        assertEquals("Sci-Fi", savedMovie.getGenre());
+        assertNotNull(savedMovie.getTheater());
+        assertEquals("INOX", savedMovie.getTheater().getName());
+    }
+}

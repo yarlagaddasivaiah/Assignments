@@ -1,0 +1,5 @@
+INDEX VERSION 1.4+D:\Ms-practice\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2317501585.index
+1698827149.index
+116977219.index
+1050042363.index
